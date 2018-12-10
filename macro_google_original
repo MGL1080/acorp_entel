@@ -1,0 +1,199 @@
+function onEdit(e)
+{
+  var worksheet = SpreadsheetApp.getActive();
+  var LastRow = worksheet.getLastRow() 
+  var LastRowNum = +LastRow;
+  Logger.log(worksheet.getName());
+  var sheet = worksheet.getActiveSheet();
+  var range = e.range;
+  Logger.log("LastRow");
+  Logger.log(LastRow);
+  Logger.log(String(sheet.getRange("B"+String(LastRowNum)).getValue()).trim());
+  //Logger.log(String(sheet.getRange("B"+String(LastRowNum-3)).getValue()).trim());
+  var bo_acorp = sheet.getRange("AP"+range.getRow()).getValue();
+  var proyecto_acorp = String(sheet.getRange("W"+range.getRow()).getValue()).trim();
+  var rutcorp = String(sheet.getRange("C"+range.getRow()).getValue()).trim();
+  var id_proyecto = 0;
+  var rol = 1;
+  var opteam = "back_ec";
+  switch (rutcorp)  {
+    case "60506000-5":
+      opteam = "crios";
+      rutcorp = "60506011-0";
+      break;
+    case "60506011-0":      
+      opteam = "crios";
+      break;      
+  }
+  //Logger.log("bien");
+  var jexcel = "";
+  var fechasolicitud = String(Utilities.formatDate(sheet.getRange("A"+range.getRow()).getValue(),"GMT-4","yyyy-MM-dd HH:mm:ss")).trim();  
+  var idsolicitud = String(sheet.getRange("B"+range.getRow()).getValue()).trim();
+  var cuenta = String(sheet.getRange("E"+range.getRow()).getValue()).trim();
+  
+  var rutsolicitante = String(sheet.getRange("F"+range.getRow()).getValue()).trim();
+  var nombresolicitante = String(sheet.getRange("G"+range.getRow()).getValue()).trim();
+  var emailsolicitante = String(sheet.getRange("H"+range.getRow()).getValue()).trim();
+  var movilcontactosolicitante = String(sheet.getRange("I"+range.getRow()).getValue()).trim();
+  
+  var opcioncompraequipo = String(sheet.getRange("X"+range.getRow()).getValue()).trim();
+  var movil = String(sheet.getRange("Y"+range.getRow()).getValue()).trim();  
+  var nombreoficialplan = String(sheet.getRange("AB"+range.getRow()).getValue()).trim();  
+  var codigomaterial = String(sheet.getRange("AF"+range.getRow()).getValue()).trim();  
+  var modeloequipo = String(sheet.getRange("AH"+range.getRow()).getValue()).trim(); 
+  var cuotainicialequipo = String(sheet.getRange("AI"+range.getRow()).getValue()).trim();
+  
+  var rutitular = String(sheet.getRange("N"+range.getRow()).getValue()).trim();
+  var nombretitular = String(sheet.getRange("O"+range.getRow()).getValue()).trim();
+  var movilcontactotitular = String(sheet.getRange("P"+range.getRow()).getValue()).trim();
+  var operadoractualtitular = String(sheet.getRange("U"+range.getRow()).getValue()).trim();
+  var tipoplanactualtitular = String(sheet.getRange("V"+range.getRow()).getValue()).trim();
+  
+  var direccion_titular = String(sheet.getRange("Q"+range.getRow()).getValue()).trim()+" "+String(sheet.getRange("R"+range.getRow()).getValue()).trim()+" "+String(sheet.getRange("S"+range.getRow()).getValue()).trim()+" "+String(sheet.getRange("T"+range.getRow()).getValue()).trim();
+  var direccion = String(sheet.getRange("J"+range.getRow()).getValue()).trim()+" "+String(sheet.getRange("K"+range.getRow()).getValue()).trim()+" "+String(sheet.getRange("L"+range.getRow()).getValue()).trim()+" "+String(sheet.getRange("M"+range.getRow()).getValue()).trim();
+  
+  //direccion = direccion.replace("\"", "");
+  direccion = direccion.replace("#", "Nro.");
+  direccion_titular = direccion_titular.replace("#", "Nro.");
+  //Logger.log(bo_acorp);
+  switch (proyecto_acorp)  {
+        case "Venta de equipo sin plan":
+            id_proyecto = 63;
+            rol = 2;
+            jexcel="[%22"+idsolicitud+"%22,%22"+fechasolicitud+"%22,%22"+cuenta+"%22,%22"+rutsolicitante+"%22,%22"+nombresolicitante+"%22,%22"+emailsolicitante+"%22,%22"+movilcontactosolicitante+"%22,%22"+opcioncompraequipo+"%22,%22"+movil+"%22,%22"+nombreoficialplan+"%22,%22"+codigomaterial+"%22,%22"+modeloequipo+"%22,%22"+cuotainicialequipo+"%22,%22"+rutitular+"%22,%22"+nombretitular+"%22,%22"+movilcontactotitular+"%22,%22"+operadoractualtitular+"%22,%22"+tipoplanactualtitular+"%22,%22"+direccion_titular+"%22,%22"+direccion+"%22,%22%22,%22%22,%22%22]";
+            break;
+        case "Nueva línea":
+            id_proyecto = 59;
+            jexcel="[%22"+idsolicitud+"%22,%22"+fechasolicitud+"%22,%22"+cuenta+"%22,%22"+rutsolicitante+"%22,%22"+nombresolicitante+"%22,%22"+emailsolicitante+"%22,%22"+movilcontactosolicitante+"%22,%22"+opcioncompraequipo+"%22,%22"+movil+"%22,%22"+nombreoficialplan+"%22,%22"+codigomaterial+"%22,%22"+modeloequipo+"%22,%22"+cuotainicialequipo+"%22,%22"+rutitular+"%22,%22"+nombretitular+"%22,%22"+movilcontactotitular+"%22,%22"+operadoractualtitular+"%22,%22"+tipoplanactualtitular+"%22,%22"+direccion_titular+"%22,%22"+direccion+"%22,%22%22,%22%22,%22%22]";
+            break;
+        case "Portarme":
+            id_proyecto = 62;
+            jexcel="[%22"+idsolicitud+"%22,%22"+fechasolicitud+"%22,%22"+cuenta+"%22,%22"+rutsolicitante+"%22,%22"+nombresolicitante+"%22,%22"+emailsolicitante+"%22,%22"+movilcontactosolicitante+"%22,%22"+opcioncompraequipo+"%22,%22"+movil+"%22,%22"+nombreoficialplan+"%22,%22"+codigomaterial+"%22,%22"+modeloequipo+"%22,%22"+cuotainicialequipo+"%22,%22"+rutitular+"%22,%22"+nombretitular+"%22,%22"+movilcontactotitular+"%22,%22"+operadoractualtitular+"%22,%22"+tipoplanactualtitular+"%22,%22"+direccion_titular+"%22,%22"+direccion+"%22,%22%22,%22%22,%22%22]";
+            break;
+        case "Asociar línea Entel a la empresa":
+            id_proyecto = 61;
+            jexcel="[%22"+idsolicitud+"%22,%22"+fechasolicitud+"%22,%22"+cuenta+"%22,%22"+rutsolicitante+"%22,%22"+nombresolicitante+"%22,%22"+emailsolicitante+"%22,%22"+movilcontactosolicitante+"%22,%22"+opcioncompraequipo+"%22,%22"+movil+"%22,%22"+nombreoficialplan+"%22,%22"+codigomaterial+"%22,%22"+modeloequipo+"%22,%22"+cuotainicialequipo+"%22,%22"+rutitular+"%22,%22"+nombretitular+"%22,%22"+movilcontactotitular+"%22,%22"+operadoractualtitular+"%22,%22"+tipoplanactualtitular+"%22,%22"+direccion_titular+"%22,%22"+direccion+"%22,%22%22,%22%22,%22%22]";
+            break;     
+        case "Cambiarme de plan":
+            id_proyecto = 60;
+            jexcel="[%22"+idsolicitud+"%22,%22"+fechasolicitud+"%22,%22"+cuenta+"%22,%22"+rutsolicitante+"%22,%22"+nombresolicitante+"%22,%22"+emailsolicitante+"%22,%22"+movilcontactosolicitante+"%22,%22"+opcioncompraequipo+"%22,%22"+movil+"%22,%22"+nombreoficialplan+"%22,%22"+codigomaterial+"%22,%22"+modeloequipo+"%22,%22"+cuotainicialequipo+"%22,%22"+rutitular+"%22,%22"+nombretitular+"%22,%22"+movilcontactotitular+"%22,%22"+operadoractualtitular+"%22,%22"+tipoplanactualtitular+"%22,%22"+direccion_titular+"%22,%22"+direccion+"%22,%22%22,%22%22,%22%22]";
+            break;      
+    }
+  if (bo_acorp != true)
+  {
+    Logger.log("http://www.digitalcorp.cl:8082/acorp_qa/SaveRequerimientoService?usuario=econviene&rol="+rol+"&rutcliente="+rutcorp+"&proyecto="+id_proyecto+"&cantidad=1&opteam="+opteam+"&jexcel="+jexcel);
+    var response = UrlFetchApp.fetch("http://www.digitalcorp.cl:8082/acorp_qa/SaveRequerimientoService?usuario=econviene&rol="+rol+"&rutcliente="+rutcorp+"&proyecto="+id_proyecto+"&cantidad=1&opteam="+opteam+"&jexcel="+jexcel);
+    Logger.log(response);
+    sheet.getRange("AP"+range.getRow()).setValue(true);
+    sheet.getRange("AQ"+range.getRow()).setValue(response.toString().replace("\n", ""));
+  }
+}
+
+
+function onFire(e)
+{
+  var worksheet = SpreadsheetApp.getActiveSheet();
+  //Logger.log(worksheet.getName());
+  var LastRow = worksheet.getLastRow() 
+  var LastRowNum = +LastRow;  
+  Logger.log("LastRow...");
+  Logger.log(String(worksheet.getRange("B"+String(LastRowNum)).getValue()).trim()); 
+  var subida = 0;
+  //var bo_acorp = worksheet.getRange("AP"+range.getRow()).getValue();
+  var bo_acorp = worksheet.getRange("AP"+String(LastRowNum)).getValue();
+  while (bo_acorp == false || bo_acorp=="undefined" || bo_acorp==undefined)
+  {
+    Logger.log(String(worksheet.getRange("B"+String(LastRowNum-subida)).getValue()).trim());
+    var proyecto_acorp = String(worksheet.getRange("W"+String(LastRowNum-subida)).getValue()).trim();
+    var rutcorp = String(worksheet.getRange("C"+String(LastRowNum-subida)).getValue()).trim();    
+    var id_proyecto = 0;
+    var rol = 1;
+    var opteam = "back_ec";
+    switch (rutcorp)  {
+      case "60506000-5":
+        opteam = "crios";
+        rutcorp = "60506011-0";
+        break;
+      case "60506011-0":      
+        opteam = "crios";
+        break;      
+    }
+    var jexcel = "";
+    var fechasolicitud = String(Utilities.formatDate(worksheet.getRange("A"+String(LastRowNum-subida)).getValue(),"GMT-4","yyyy-MM-dd HH:mm:ss")).trim();  
+    var idsolicitud = String(worksheet.getRange("B"+String(LastRowNum-subida)).getValue()).trim();
+    var cuenta = String(worksheet.getRange("E"+String(LastRowNum-subida)).getValue()).trim();
+    
+    var rutsolicitante = String(worksheet.getRange("F"+String(LastRowNum-subida)).getValue()).trim();
+    var nombresolicitante = String(worksheet.getRange("G"+String(LastRowNum-subida)).getValue()).trim();
+    var emailsolicitante = String(worksheet.getRange("H"+String(LastRowNum-subida)).getValue()).trim();
+    var movilcontactosolicitante = String(worksheet.getRange("I"+String(LastRowNum-subida)).getValue()).trim();
+    
+    var opcioncompraequipo = String(worksheet.getRange("X"+String(LastRowNum-subida)).getValue()).trim();
+    var movil = String(worksheet.getRange("Y"+String(LastRowNum-subida)).getValue()).trim();  
+    var nombreoficialplan = String(worksheet.getRange("AB"+String(LastRowNum-subida)).getValue()).trim();  
+    var codigomaterial = String(worksheet.getRange("AF"+String(LastRowNum-subida)).getValue()).trim();  
+    var modeloequipo = String(worksheet.getRange("AH"+String(LastRowNum-subida)).getValue()).trim(); 
+    var cuotainicialequipo = String(worksheet.getRange("AI"+String(LastRowNum-subida)).getValue()).trim();
+    
+    var rutitular = String(worksheet.getRange("N"+String(LastRowNum-subida)).getValue()).trim();
+    var nombretitular = String(worksheet.getRange("O"+String(LastRowNum-subida)).getValue()).trim();
+    var movilcontactotitular = String(worksheet.getRange("P"+String(LastRowNum-subida)).getValue()).trim();
+    var operadoractualtitular = String(worksheet.getRange("U"+String(LastRowNum-subida)).getValue()).trim();
+    var tipoplanactualtitular = String(worksheet.getRange("V"+String(LastRowNum-subida)).getValue()).trim();
+    
+    //Eliminado por usuario
+    var observacion = String(worksheet.getRange("AL"+String(LastRowNum-subida)).getValue()).trim();
+    if(observacion == "Eliminado por usuario")
+    {      
+      worksheet.getRange("AR"+String(LastRowNum-subida)).setValue("ELIMINAR");  
+      idsolicitud = idsolicitud+"(E)";
+      cuenta = "ELIMINAR";
+      rutsolicitante = "ELIMINAR";
+      nombresolicitante = "ELIMINAR";
+      emailsolicitante = "ELIMINAR";
+      movilcontactosolicitante = "ELIMINAR";
+    }        
+    
+    var direccion_titular = String(worksheet.getRange("Q"+String(LastRowNum-subida)).getValue()).trim()+" "+String(worksheet.getRange("R"+String(LastRowNum-subida)).getValue()).trim()+" "+String(worksheet.getRange("S"+String(LastRowNum-subida)).getValue()).trim()+" "+String(worksheet.getRange("T"+String(LastRowNum-subida)).getValue()).trim();
+    var direccion = String(worksheet.getRange("J"+String(LastRowNum-subida)).getValue()).trim()+" "+String(worksheet.getRange("K"+String(LastRowNum-subida)).getValue()).trim()+" "+String(worksheet.getRange("L"+String(LastRowNum-subida)).getValue()).trim()+" "+String(worksheet.getRange("M"+String(LastRowNum-subida)).getValue()).trim();
+    //direccion = direccion.replace("\"", "");
+    direccion = direccion.replace(/#/g, "Nro.").replace(/,/g," ").replace(/'/g," ");
+    direccion_titular = direccion_titular.replace(/#/g, "Nro.").replace(/,/g," ").replace(/'/g," ");
+    
+    nombresolicitante = nombresolicitante.replace(","," ");
+    nombretitular = nombretitular.replace(","," ");
+    
+    Logger.log(bo_acorp);
+    switch (proyecto_acorp)  {
+      case "Venta de equipo sin plan":
+        id_proyecto = 63;
+        rol = 2;
+        jexcel="[%22"+idsolicitud+"%22,%22"+fechasolicitud+"%22,%22"+cuenta+"%22,%22"+rutsolicitante+"%22,%22"+nombresolicitante+"%22,%22"+emailsolicitante+"%22,%22"+movilcontactosolicitante+"%22,%22"+opcioncompraequipo+"%22,%22"+movil+"%22,%22"+nombreoficialplan+"%22,%22"+codigomaterial+"%22,%22"+modeloequipo+"%22,%22"+cuotainicialequipo+"%22,%22"+rutitular+"%22,%22"+nombretitular+"%22,%22"+movilcontactotitular+"%22,%22"+operadoractualtitular+"%22,%22"+tipoplanactualtitular+"%22,%22"+direccion_titular+"%22,%22"+direccion+"%22,%22%22,%22%22,%22%22]";
+        break;
+      case "Nueva línea":
+        id_proyecto = 59;
+        jexcel="[%22"+idsolicitud+"%22,%22"+fechasolicitud+"%22,%22"+cuenta+"%22,%22"+rutsolicitante+"%22,%22"+nombresolicitante+"%22,%22"+emailsolicitante+"%22,%22"+movilcontactosolicitante+"%22,%22"+opcioncompraequipo+"%22,%22"+movil+"%22,%22"+nombreoficialplan+"%22,%22"+codigomaterial+"%22,%22"+modeloequipo+"%22,%22"+cuotainicialequipo+"%22,%22"+rutitular+"%22,%22"+nombretitular+"%22,%22"+movilcontactotitular+"%22,%22"+operadoractualtitular+"%22,%22"+tipoplanactualtitular+"%22,%22"+direccion_titular+"%22,%22"+direccion+"%22,%22%22,%22%22,%22%22]";
+        break;
+      case "Portarme":
+        id_proyecto = 62;
+        jexcel="[%22"+idsolicitud+"%22,%22"+fechasolicitud+"%22,%22"+cuenta+"%22,%22"+rutsolicitante+"%22,%22"+nombresolicitante+"%22,%22"+emailsolicitante+"%22,%22"+movilcontactosolicitante+"%22,%22"+opcioncompraequipo+"%22,%22"+movil+"%22,%22"+nombreoficialplan+"%22,%22"+codigomaterial+"%22,%22"+modeloequipo+"%22,%22"+cuotainicialequipo+"%22,%22"+rutitular+"%22,%22"+nombretitular+"%22,%22"+movilcontactotitular+"%22,%22"+operadoractualtitular+"%22,%22"+tipoplanactualtitular+"%22,%22"+direccion_titular+"%22,%22"+direccion+"%22,%22%22,%22%22,%22%22]";
+        break;
+      case "Asociar línea Entel a la empresa":
+        id_proyecto = 61;
+        jexcel="[%22"+idsolicitud+"%22,%22"+fechasolicitud+"%22,%22"+cuenta+"%22,%22"+rutsolicitante+"%22,%22"+nombresolicitante+"%22,%22"+emailsolicitante+"%22,%22"+movilcontactosolicitante+"%22,%22"+opcioncompraequipo+"%22,%22"+movil+"%22,%22"+nombreoficialplan+"%22,%22"+codigomaterial+"%22,%22"+modeloequipo+"%22,%22"+cuotainicialequipo+"%22,%22"+rutitular+"%22,%22"+nombretitular+"%22,%22"+movilcontactotitular+"%22,%22"+operadoractualtitular+"%22,%22"+tipoplanactualtitular+"%22,%22"+direccion_titular+"%22,%22"+direccion+"%22,%22%22,%22%22,%22%22]";
+        break;     
+      case "Cambiarme de plan":
+        id_proyecto = 60;
+        jexcel="[%22"+idsolicitud+"%22,%22"+fechasolicitud+"%22,%22"+cuenta+"%22,%22"+rutsolicitante+"%22,%22"+nombresolicitante+"%22,%22"+emailsolicitante+"%22,%22"+movilcontactosolicitante+"%22,%22"+opcioncompraequipo+"%22,%22"+movil+"%22,%22"+nombreoficialplan+"%22,%22"+codigomaterial+"%22,%22"+modeloequipo+"%22,%22"+cuotainicialequipo+"%22,%22"+rutitular+"%22,%22"+nombretitular+"%22,%22"+movilcontactotitular+"%22,%22"+operadoractualtitular+"%22,%22"+tipoplanactualtitular+"%22,%22"+direccion_titular+"%22,%22"+direccion+"%22,%22%22,%22%22,%22%22]";
+        break;      
+    }
+    //Logger.log("http://www.digitalcorp.cl:8082/acorp_qa/SaveRequerimientoService?usuario=econviene&rol="+rol+"&rutcliente="+rutcorp+"&proyecto="+id_proyecto+"&cantidad=1&opteam="+opteam+"&jexcel="+jexcel);
+    //var response = UrlFetchApp.fetch("http://www.digitalcorp.cl:8082/acorp_qa/SaveRequerimientoService?usuario=econviene&rol="+rol+"&rutcliente="+rutcorp+"&proyecto="+id_proyecto+"&cantidad=1&opteam="+opteam+"&jexcel="+jexcel);
+    //Logger.log(response);
+    worksheet.getRange("AW"+String(LastRowNum-subida)).setValue(true);
+    worksheet.getRange("AX"+String(LastRowNum-subida)).setValue(response.toString().replace("\n", ""));
+    
+    subida += 1;
+    bo_acorp = worksheet.getRange("AP"+String(LastRowNum-subida)).getValue();        
+  }  
+}
